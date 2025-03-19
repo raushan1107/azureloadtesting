@@ -21,7 +21,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/", () => "Hello, Learn GitHub Actions and Azure Load Testing with Raushan!");
+app.MapGet("/", () => "Hello, Learn GitHub Actions and Azure Load Testing with Raushan!").WithOpenApi();;
 
 app.MapGet("/weatherforecast", () =>
 {
