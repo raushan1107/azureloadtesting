@@ -1,0 +1,41 @@
+name: Azure Load Testing
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-load-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Upload JMeter Test File to Azure Load Testing
+        run: |
+          az load test upload \
+            --name ${{ secrets.AZURE_LOAD_TEST_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --file load-test.jmx
+
+      - name: Run Load Test on Azure
+        run: |
+          az load test run \
+            --name ${{ secrets.AZURE_LOAD_TEST_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --test-id "my-load-test-run"
+
+      - name: Get Load Test Results
+        run: |
+          az load test show \
+            --name ${{ secrets.AZURE_LOAD_TEST_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --test-id "my-load-test-run"
